@@ -33,20 +33,23 @@ namespace libice {
 	}
 
 	void JsepTransportControllerTest::CreateJsepTransportController(
-		webrtc::JsepTransportController::Config config,
-		rtc::Thread* network_thread ,
-		cricket::PortAllocator* port_allocator) {
+		webrtc::JsepTransportController::Config config, rtc::Thread* network_thread 
+		, cricket::PortAllocator* port_allocator) 
+	{
 		config.transport_observer = this;
 		config.rtcp_handler = [](const rtc::CopyOnWriteBuffer& packet,
 			int64_t packet_time_us) { RTC_NOTREACHED(); };
+
 		config.ice_transport_factory = fake_ice_transport_factory_.get();
 		config.dtls_transport_factory = fake_dtls_transport_factory_.get();
 		config.on_dtls_handshake_error_ = [](rtc::SSLHandshakeError s) {};
-		transport_controller_ = std::make_unique<webrtc::JsepTransportController>(
-			network_thread, port_allocator, nullptr /* async_resolver_factory */,
-			config);
-		network_thread->Invoke<void>(RTC_FROM_HERE,
-			[&] { ConnectTransportControllerSignals(); });
+
+
+		transport_controller_ = std::make_unique<webrtc::JsepTransportController>( config);
+
+		network_thread->Invoke<void>(RTC_FROM_HERE, [&] {
+			ConnectTransportControllerSignals(); 
+		});
 	}
 
 	void JsepTransportControllerTest::ConnectTransportControllerSignals() {
@@ -76,7 +79,7 @@ namespace libice {
 
 	std::unique_ptr<cricket::SessionDescription>
 		JsepTransportControllerTest::CreateSessionDescriptionWithoutBundle() {
-		auto description = std::make_unique<cricket::SessionDescription>();
+		std::unique_ptr<cricket::SessionDescription> description = std::make_unique<cricket::SessionDescription>();
 		AddAudioSection(description.get(), kAudioMid1, kIceUfrag1, kIcePwd1,
 			cricket::ICEMODE_FULL, cricket::CONNECTIONROLE_ACTPASS,
 			nullptr);

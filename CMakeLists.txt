@@ -342,6 +342,45 @@ set(ALL_LIB
 		
 		webrtc_ice_test
 
+		rtc_sdp_video_format_utils
+
+
+		# api/audio_codecs
+
+		audio_codecs_api 				
+		rtc_sdp_video_format_utils 	
+		builtin_audio_decoder_factory 	
+		builtin_audio_encoder_factory 	
+		opus_audio_decoder_factory 	
+		opus_audio_encoder_factory 	
+
+		audio_encoder_g711 
+		 audio_decoder_g711 
+		 audio_encoder_g722 
+		  audio_decoder_g722 
+		  audio_encoder_ilbc 
+		   audio_decoder_ilbc 
+
+		  # audio_encoder_isac 		
+		 #   audio_decoder_isac 		
+		    audio_encoder_isac_float 	
+		   
+		    audio_decoder_isac_float 	
+		audio_decoder_L16 		
+		 audio_encoder_L16 	
+
+		 audio_encoder_opus_config 	
+		 #audio_decoder_opus_config 	
+		 audio_encoder_opus 		
+		 audio_decoder_opus 		
+		 audio_encoder_multiopus 	
+		 audio_decoder_multiopus 	
+
+
+
+
+
+
 )
 
 target_link_libraries(ice_server_main  ${ALL_LIB} )
