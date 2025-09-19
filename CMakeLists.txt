@@ -340,7 +340,7 @@ set(ALL_LIB
 		video_track_source  				
 		#stats_collector_interface            
 		
-		
+		webrtc_ice_test
 
 )
 
@@ -349,6 +349,8 @@ target_link_libraries(ice_server_main  ${ALL_LIB} )
 
 target_link_libraries(ice_client_main  ${ALL_LIB} )
 
+
+add_subdirectory(webrtc_ice_test)
 
 #set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /SAFESEH:NO")
 
