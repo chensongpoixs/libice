@@ -53,24 +53,51 @@ add_executable(ice_client_main ${ice_client_main_source})
 
 set(ALL_LIB 
 
-libwebrtc.lib
-		abseil_dll.lib
-		absl_cordz_functions.lib
-		absl_cordz_handle.lib
-		absl_cordz_info.lib
-		absl_cordz_sample_token.lib
-		absl_flags.lib
-		absl_flags_commandlineflag_internal.lib
-		absl_flags_internal.lib
-		absl_flags_marshalling.lib
-		absl_flags_parse.lib
-		absl_flags_private_handle_accessor.lib
-		absl_flags_program_name.lib
-		absl_flags_reflection.lib
-		absl_flags_usage.lib
-		absl_flags_usage_internal.lib
-		absl_low_level_hash.lib
-		absl_random_internal_distribution_test_util.lib
+		libwebrtc
+		abseil_dll 
+		absl_cord_internal 
+		absl_cordz_functions 
+		absl_cordz_handle 
+		absl_cordz_info 
+		absl_cordz_sample_token 
+		absl_flags 
+		absl_flags_commandlineflag_internal 
+		absl_flags_internal 
+		absl_flags_marshalling 
+		absl_flags_parse 
+		absl_flags_private_handle_accessor 
+		absl_flags_program_name 
+		absl_flags_reflection 
+		absl_flags_usage 
+		absl_flags_usage_internal 
+		absl_low_level_hash 
+		absl_random_internal_distribution_test_util 
+		absl_statusor 
+
+		absl_cord_internal 
+		absl_cordz_functions 
+		absl_cordz_handle 
+		absl_cordz_info 
+		absl_cordz_sample_token 
+		absl_flags 
+		absl_flags_commandlineflag 
+		absl_flags_commandlineflag_internal 
+		absl_flags_config 
+		absl_flags_internal 
+		absl_flags_marshalling 
+		absl_flags_parse 
+		absl_flags_private_handle_accessor 
+		absl_flags_program_name 
+		absl_flags_reflection 
+		absl_flags_usage 
+		absl_flags_usage_internal 
+		absl_low_level_hash 
+		absl_random_internal_distribution_test_util 
+		absl_statusor 
+		absl_strerror 
+
+
+
 		jpeg-static.lib
 		
 
@@ -85,7 +112,15 @@ libwebrtc.lib
 		
 		api.lib
 		peerconnection.lib
-
+		# api/ numerics
+		numerics
+		# api/video_codecs 
+		video_codecs_api  				
+		#bitstream_parser_api  			
+		builtin_video_decoder_factory  	
+		builtin_video_encoder_factory  	
+		vp8_temporal_layers_factory  	
+		rtc_software_fallback_wrappers  
 		#  moudles /video /desktop_capture
 
 		desktop_capture_generic.lib
@@ -101,7 +136,7 @@ libwebrtc.lib
 		common_video
 		
 		proxy.lib
-		rtc_pc_base.lib
+		rtc_pc_base
 		checks.lib
 		rtc_base.lib
 		common_audio.lib
@@ -114,7 +149,7 @@ libwebrtc.lib
 		rtc_media_base.lib
 
 
-
+		libsrtp2.lib
 		# api/video
 
 		video_rtp_headers 						
@@ -172,7 +207,7 @@ libwebrtc.lib
 			  #ucrt.lib
 			  #  libuv.lib  的依赖库
 			  dbghelp.lib
-			  			  rtc_p2p 
+			  rtc_p2p 
 			  p2p_server_utils
 			  libstunprober
 
@@ -262,6 +297,49 @@ libwebrtc.lib
 		stable_target_rate_experiment              
 		min_video_bitrate_experiment 
 		# rtc_base
+
+		#call 
+
+		version                  
+		call_interfaces          
+		#audio_sender_interface   
+		rtp_interfaces           
+		call_rtp_receiver             
+		call_rtp_sender               
+		bitrate_configurator     
+		bitrate_allocator        
+		call                     
+		#receive_stream_interface 
+		video_stream_api         
+		simulated_network        
+		fake_network   
+		
+		#pc 
+		session_description  				
+		simulcast_description  				
+		media_protocol_names  				
+		connection_context  				
+		peer_connection_message_handler  	
+		usage_pattern  						
+		rtp_transceiver  					
+		rtp_transmission_manager  			
+		transceiver_list  					
+		pc_rtp_receiver  						
+		audio_rtp_receiver  				
+		video_rtp_receiver  				
+		video_rtp_track_source  			
+		audio_track  						
+		video_track  						
+		#sdp_state_provider  				
+		jitter_buffer_delay  				
+		remote_audio_source  				
+		pc_rtp_sender  						
+		rtp_parameters_conversion  			
+		dtmf_sender  						
+		media_stream  						
+		video_track_source  				
+		#stats_collector_interface            
+		
 		
 
 )
