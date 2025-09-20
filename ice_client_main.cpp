@@ -36,18 +36,30 @@
 #include "absl/algorithm/algorithm.h"
 #include "rtc_base/fake_ssl_identity.h"
 #include "pc/jsep_transport_controller.h"
-#include "webrtc_ice_test/cfake_ice_define.h"
-#include "webrtc_ice_test/cjsep_transport_controller_test.h"
+#include "fake_ice_transport/cfake_ice_define.h"
+#include "cjsep_transport_controller_test.h"
 
 #include "api/jsep_session_description.h"
-
+#include <thread>
+#include <chrono>
 using namespace libice;
+
+JsepTransportControllerTest jsep_transport_test;
+std::unique_ptr<cricket::SessionDescription> description;
+
+
+void test_jsep_transport_controller_init()
+{
+	jsep_transport_test.CreateJsepTransportController(webrtc::JsepTransportController::Config());
+	description = jsep_transport_test.CreateSessionDescriptionWithoutBundle();
+
+}
+
+
 
 void GetRtpTransport()
 {
-	JsepTransportControllerTest jsep_transport_test;
-	jsep_transport_test.CreateJsepTransportController(webrtc::JsepTransportController::Config());
-	std::unique_ptr<cricket::SessionDescription> description = jsep_transport_test.CreateSessionDescriptionWithoutBundle();
+	
 	
 	auto jsep_desc = std::make_unique<webrtc::JsepSessionDescription>(webrtc::SdpType::kAnswer);
 
@@ -71,12 +83,92 @@ void GetRtpTransport()
 }
 
 
+void  SetIceConfig()
+{
+	 (jsep_transport_test.transport_controller_
+		->SetLocalDescription(webrtc::SdpType::kOffer, description.get())
+		.ok());
+
+	 jsep_transport_test.transport_controller_->SetIceConfig(
+		 jsep_transport_test.CreateIceConfig(kTimeout, cricket::GATHER_CONTINUALLY));
+	FakeDtlsTransport* fake_audio_dtls = static_cast<FakeDtlsTransport*>(
+		jsep_transport_test.transport_controller_->GetDtlsTransport(kAudioMid1));
+	//ASSERT_NE(nullptr, fake_audio_dtls);
+	//EXPECT_EQ(kTimeout,
+		fake_audio_dtls->fake_ice_transport()->receiving_timeout()/*)*/;
+	/*EXPECT_TRUE*/(fake_audio_dtls->fake_ice_transport()->gather_continually());
+
+	// Test that value stored in controller is applied to new transports.
+	jsep_transport_test.AddAudioSection(description.get(), kAudioMid2, kIceUfrag1, kIcePwd1,
+		cricket::ICEMODE_FULL, cricket::CONNECTIONROLE_ACTPASS,
+		nullptr);
+
+	/*EXPECT_TRUE*/(jsep_transport_test.transport_controller_
+		->SetLocalDescription(webrtc::SdpType::kOffer, description.get())
+		.ok());
+	fake_audio_dtls = static_cast<FakeDtlsTransport*>(
+		jsep_transport_test.transport_controller_->GetDtlsTransport(kAudioMid2));
+	//ASSERT_NE(nullptr, fake_audio_dtls);
+	//EXPECT_EQ(kTimeout,
+		fake_audio_dtls->fake_ice_transport()->receiving_timeout()/*)*/;
+	/*EXPECT_TRUE*/(fake_audio_dtls->fake_ice_transport()->gather_continually());
+}
+
+void  MaybeStartGathering()
+{
+	 
+	 (jsep_transport_test.transport_controller_
+		->SetLocalDescription(webrtc::SdpType::kOffer, description.get())
+		.ok());
+	// After setting the local description, we should be able to start gathering
+	// candidates.
+	 jsep_transport_test.transport_controller_->MaybeStartGathering();
+	 //cricket::kIceGatheringGathering
+	//EXPECT_EQ_WAIT(cricket::kIceGatheringGathering, gathering_state_, kTimeout);
+	//EXPECT_EQ(1, gathering_state_signal_count_);
+}
+
+void  AddRemoveRemoteCandidates()
+{
+	 
+	jsep_transport_test.transport_controller_->SetLocalDescription(webrtc::SdpType::kOffer,
+		description.get());
+	jsep_transport_test.transport_controller_->SetRemoteDescription(webrtc::SdpType::kAnswer,
+		description.get());
+	auto fake_audio_dtls = static_cast<FakeDtlsTransport*>(
+		jsep_transport_test.transport_controller_->GetDtlsTransport(kAudioMid1));
+	//ASSERT_NE(nullptr, fake_audio_dtls);
+	cricket::Candidates candidates;
+	candidates.push_back(
+		jsep_transport_test.CreateCandidate(kAudioMid1, cricket::ICE_CANDIDATE_COMPONENT_RTP));
+	/*EXPECT_TRUE*/(
+		jsep_transport_test.transport_controller_->AddRemoteCandidates(kAudioMid1, candidates).ok());
+	/*EXPECT_EQ*///(1U,
+	int size =	 fake_audio_dtls->fake_ice_transport()->remote_candidates().size()/*)*/;
+
+	/*EXPECT_TRUE*/(jsep_transport_test.transport_controller_->RemoveRemoteCandidates(candidates).ok());
+	//EXPECT_EQ(0U,
+	size =	fake_audio_dtls->fake_ice_transport()->remote_candidates().size()/*)*/;
+}
+
+
+
+
  
 
 
 int main(int argc, char * argv[])
 {
-	GetRtpTransport();
+	test_jsep_transport_controller_init();
+	//GetRtpTransport();
 
+
+	//SetIceConfig();
+	//MaybeStartGathering();
+	AddRemoveRemoteCandidates();
+	while (true)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	}
 	return  EXIT_SUCCESS;
 }

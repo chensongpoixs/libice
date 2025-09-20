@@ -16,30 +16,11 @@
 
 
  ******************************************************************************/
-#ifndef  __C_FAKE_ICE_TRANSPORT_WRAPPER_H_
-#define  __C_FAKE_ICE_TRANSPORT_WRAPPER_H_
+
+#include "fake_port_allocator/cfake_port_allocator.h"
 
 
+namespace libice
+{
 
-
-#include "webrtc_ice_test/cfake_ice_define.h"
-#include "webrtc_ice_test/cfake_ice_transport.h"
-#include "webrtc_ice_test/cfake_dtls_transport.h"
-#include "webrtc_ice_test/cfake_dtls_transport_factory.h"
-#include "webrtc_ice_test/cfake_ice_transport_wrapper.h"
-namespace libice {
-
-	class FakeIceTransportWrapper : public webrtc::IceTransportInterface {
-	public:
-		explicit FakeIceTransportWrapper(
-			std::unique_ptr<FakeIceTransport> internal)
-			: internal_(std::move(internal)) {}
-
-		cricket::IceTransportInternal* internal() override { return internal_.get(); }
-
-	private:
-		std::unique_ptr<FakeIceTransport> internal_;
-	};
 }
-
-#endif // __C_FAKE_ICE_TRANSPORT_WRAPPER_H_

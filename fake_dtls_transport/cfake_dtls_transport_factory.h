@@ -38,7 +38,7 @@
 #include "rtc_base/fake_ssl_identity.h"
 #include "pc/jsep_transport_controller.h"
 
-#include "webrtc_ice_test/cfake_ice_define.h" 
+#include "fake_ice_transport/cfake_ice_define.h" 
 
 namespace libice {
 

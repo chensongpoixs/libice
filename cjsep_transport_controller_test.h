@@ -20,12 +20,12 @@
 #define  __C_JSEP_TRANSPORT_CONTROLLER_TEST_H_
 
 
-#include "webrtc_ice_test/cfake_ice_define.h"
-#include "webrtc_ice_test/cfake_ice_transport.h"
-#include "webrtc_ice_test/cfake_dtls_transport.h"
-#include "webrtc_ice_test/cfake_dtls_transport_factory.h"
-#include "webrtc_ice_test/cfake_ice_transport_wrapper.h"
-#include "webrtc_ice_test/cfake_ice_transport_factory.h"
+#include "fake_ice_transport/cfake_ice_define.h"
+#include "fake_ice_transport/cfake_ice_transport.h"
+#include "fake_dtls_transport/cfake_dtls_transport.h"
+#include "fake_dtls_transport/cfake_dtls_transport_factory.h"
+#include "fake_ice_transport/cfake_ice_transport_wrapper.h"
+#include "fake_ice_transport/cfake_ice_transport_factory.h"
 namespace libice {
 
 

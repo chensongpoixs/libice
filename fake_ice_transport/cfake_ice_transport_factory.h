@@ -19,11 +19,9 @@
 #ifndef  __C_FAKE_ICE_TRANSPORT_FACTORY_H_
 #define  __C_FAKE_ICE_TRANSPORT_FACTORY_H_
 
-#include "webrtc_ice_test/cfake_ice_define.h"
-#include "webrtc_ice_test/cfake_ice_transport.h"
-#include "webrtc_ice_test/cfake_dtls_transport.h"
-#include "webrtc_ice_test/cfake_dtls_transport_factory.h"
-#include "webrtc_ice_test/cfake_ice_transport_wrapper.h"
+#include "fake_ice_transport/cfake_ice_define.h"
+#include "fake_ice_transport/cfake_ice_transport.h" 
+#include "fake_ice_transport/cfake_ice_transport_wrapper.h"
 
 
 

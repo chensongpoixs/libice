@@ -19,11 +19,11 @@
  ******************************************************************************/
 
 
-#include "webrtc_ice_test/cfake_ice_define.h"
+#include "fake_ice_transport/cfake_ice_define.h"
 
 
-#include "webrtc_ice_test/cjsep_transport_controller_test.h"
-
+#include "cjsep_transport_controller_test.h"
+#include <sstream>
 namespace libice {
 
 	JsepTransportControllerTest::JsepTransportControllerTest() : signaling_thread_(rtc::Thread::Current())
@@ -37,12 +37,16 @@ namespace libice {
 		, cricket::PortAllocator* port_allocator) 
 	{
 		config.transport_observer = this;
-		config.rtcp_handler = [](const rtc::CopyOnWriteBuffer& packet,
-			int64_t packet_time_us) { RTC_NOTREACHED(); };
+		config.rtcp_handler = [](const rtc::CopyOnWriteBuffer& packet, int64_t packet_time_us) {
+			RTC_NOTREACHED();
+		};
 
 		config.ice_transport_factory = fake_ice_transport_factory_.get();
 		config.dtls_transport_factory = fake_dtls_transport_factory_.get();
-		config.on_dtls_handshake_error_ = [](rtc::SSLHandshakeError s) {};
+		config.on_dtls_handshake_error_ = [](rtc::SSLHandshakeError s) {
+		
+			RTC_LOG_F(LS_WARNING) << "on_dtls_handshake_error_";
+		};
 
 
 		transport_controller_ = std::make_unique<webrtc::JsepTransportController>(
@@ -56,24 +60,37 @@ namespace libice {
 
 	void JsepTransportControllerTest::ConnectTransportControllerSignals() {
 		transport_controller_->SubscribeIceConnectionState(
-			[this](cricket::IceConnectionState s) {
+			[this](cricket::IceConnectionState s) 
+		{
+			RTC_LOG_F(LS_INFO) << "SubscribeIceConnectionState =  " << s;
 			JsepTransportControllerTest::OnConnectionState(s);
 		});
 		transport_controller_->SubscribeConnectionState(
 			[this](webrtc::PeerConnectionInterface::PeerConnectionState s) {
+			RTC_LOG_F(LS_INFO) << "SubscribeConnectionState =  " << s;
 			JsepTransportControllerTest::OnCombinedConnectionState(s);
 		});
 		transport_controller_->SubscribeStandardizedIceConnectionState(
 			[this](webrtc::PeerConnectionInterface::IceConnectionState s) {
+			RTC_LOG_F(LS_INFO) << "SubscribeStandardizedIceConnectionState =  " << s;
 			JsepTransportControllerTest::OnStandardizedIceConnectionState(s);
 		});
 		transport_controller_->SubscribeIceGatheringState(
 			[this](cricket::IceGatheringState s) {
+			RTC_LOG_F(LS_INFO) << "SubscribeIceGatheringState =  " << s;
 			JsepTransportControllerTest::OnGatheringState(s);
 		});
 		transport_controller_->SubscribeIceCandidateGathered(
 			[this](const std::string& transport,
 				const std::vector<cricket::Candidate>& candidates) {
+			std::stringstream  cmd;
+			for (auto c : candidates)
+			{
+				cmd << c.ToString();
+			}
+
+
+			RTC_LOG_F(LS_INFO) << "SubscribeIceCandidateGathered =  " << cmd.str();
 			JsepTransportControllerTest::OnCandidatesGathered(transport,
 				candidates);
 		});
@@ -196,7 +213,7 @@ namespace libice {
 	cricket::Candidate JsepTransportControllerTest::CreateCandidate(const std::string& transport_name, int component) {
 		cricket::Candidate c;
 		c.set_transport_name(transport_name);
-		c.set_address(rtc::SocketAddress("192.168.1.1", 8000));
+		c.set_address(rtc::SocketAddress("192.168.3.2", 8000));
 		c.set_component(component);
 		c.set_protocol(cricket::UDP_PROTOCOL_NAME);
 		c.set_priority(1);
@@ -261,7 +278,9 @@ namespace libice {
 		++combined_connection_state_signal_count_;
 	}
 
-	void JsepTransportControllerTest::OnGatheringState(cricket::IceGatheringState state) {
+	void JsepTransportControllerTest::OnGatheringState(cricket::IceGatheringState state) 
+	{
+		RTC_LOG(LS_INFO) << "state =" << state;
 		ice_signaled_on_thread_ = rtc::Thread::Current();
 		gathering_state_ = state;
 		++gathering_state_signal_count_;

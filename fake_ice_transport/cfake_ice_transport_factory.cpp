@@ -19,10 +19,9 @@
  ******************************************************************************/
 
 
-#include "webrtc_ice_test/cfake_ice_define.h"
+#include "fake_ice_transport/cfake_ice_define.h"
 
 
 namespace libice {
-
 
 }

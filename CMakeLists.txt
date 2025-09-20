@@ -38,6 +38,8 @@ link_directories(
 file(GLOB ice_server_main_source 
 	 
 	ice_server_main.cpp
+	cjsep_transport_controller_test.h 
+	cjsep_transport_controller_test.cpp 
 	 
 ) 
 
@@ -45,11 +47,21 @@ file(GLOB ice_server_main_source
 file(GLOB ice_client_main_source 
 	 
 	ice_client_main.cpp
+	cjsep_transport_controller_test.h 
+	cjsep_transport_controller_test.cpp 
 	 
 ) 
+
+
+FILE(GLOB  fake_stun_test_source
+
+
+	fake_stun_test.cpp 
+	)
+
 add_executable(ice_server_main ${ice_server_main_source})
 add_executable(ice_client_main ${ice_client_main_source})
-
+add_executable(fake_stun_test   ${fake_stun_test_source})
 
 set(ALL_LIB 
 
@@ -222,7 +234,9 @@ set(ALL_LIB
 		mutex               		
 		sequence_checker_internal 	
 		yield_policy
-
+		#rtc_base/memory 
+		aligned_malloc  
+		fifo_buffer  	
 		#rtc_base
 		callback_list
 		rtc_numerics
@@ -233,6 +247,7 @@ set(ALL_LIB
 		iphlpapi.lib
        secur32.lib
 		#rtc_base
+		rtc_base_tests_utils
 		weak_ptr
 		network_constants
 		async_resolver_interface
@@ -340,7 +355,7 @@ set(ALL_LIB
 		video_track_source  				
 		#stats_collector_interface            
 		
-		webrtc_ice_test
+		
 
 		rtc_sdp_video_format_utils
 
@@ -414,24 +429,37 @@ set(ALL_LIB
 		 neteq_input_audio_tools 		
 		 #audio_decoder_interface 		
 		# audio_encoder_interface 		
-
-
+		fake_port_allocator
+		fake_packet_transport
+		fake_dtls_transport 
+		fake_ice_transport
+		fake_stun
+		
+		
 
 )
+
+
+
 
 target_link_libraries(ice_server_main  ${ALL_LIB} )
 
 
 target_link_libraries(ice_client_main  ${ALL_LIB} )
+target_link_libraries(fake_stun_test  ${ALL_LIB} )
 
-
-add_subdirectory(webrtc_ice_test)
+add_subdirectory(fake_ice_transport)
+add_subdirectory(fake_dtls_transport)
+add_subdirectory(fake_port_allocator)
+add_subdirectory(fake_packet_transport)
+add_subdirectory(fake_stun)
 
 #set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /SAFESEH:NO")
 
 
 set(AllFile ${ice_client_main_source}
 			${ice_server_main_source}
+			${fake_stun_test_source}
 )
 foreach(fileItem ${AllFile})       
     # Get the directory of the source file
@@ -451,5 +479,5 @@ endforeach()
 
 set_property(TARGET ice_client_main  				PROPERTY FOLDER ${PROJECT_NAME})
 set_property(TARGET ice_server_main  				PROPERTY FOLDER ${PROJECT_NAME})
-
+set_property(TARGET fake_stun_test  				PROPERTY FOLDER ${PROJECT_NAME})
 #file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

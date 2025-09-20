@@ -1,6 +1,6 @@
 ﻿
 
-project(webrtc_ice_test)
+project(fake_dtls_transport)
 cmake_minimum_required(VERSION 2.8)
 MESSAGE(STATUS  "####################################")
 MESSAGE(STATUS  "#############${PROJECT_NAME}###############")
@@ -20,7 +20,7 @@ MESSAGE(STATUS  "####################################")
 
 #
 
-file(GLOB webrtc_ice_test_source 
+file(GLOB fake_dtsl_transport_source 
 	 
 	*.h
 	*.cpp 
@@ -29,7 +29,7 @@ file(GLOB webrtc_ice_test_source
 
 
  
-add_library(webrtc_ice_test  STATIC  ${webrtc_ice_test_source})
+add_library(${PROJECT_NAME}  STATIC  ${fake_dtsl_transport_source})
  
 
  
@@ -38,7 +38,7 @@ add_library(webrtc_ice_test  STATIC  ${webrtc_ice_test_source})
 #set_target_properties(${PROJECT_NAME} PROPERTIES LINK_FLAGS "/SUBSYSTEM:WINDOWS /SAFESEH:NO")
 
 
-set(AllFile ${webrtc_ice_test_source} )
+set(AllFile ${fake_dtsl_transport_source} )
 foreach(fileItem ${AllFile})       
     # Get the directory of the source file
     get_filename_component(PARENT_DIR "${fileItem}" DIRECTORY)
@@ -55,6 +55,6 @@ endforeach()
 
 
 
-set_property(TARGET webrtc_ice_test  				PROPERTY FOLDER libice/${PROJECT_NAME}) 
+set_property(TARGET   ${PROJECT_NAME} 				PROPERTY FOLDER libice)
 
 #file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
