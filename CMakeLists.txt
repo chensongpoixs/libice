@@ -377,7 +377,43 @@ set(ALL_LIB
 		 audio_decoder_multiopus 	
 
 
+		 #modules/audio_coding 
 
+		 #audio_coding_module_typedefs 	
+		 audio_coding 					
+		 legacy_encoded_audio_frame 	
+		 webrtc_cng 					
+		 audio_encoder_cng 				
+		 red 							
+		 g711 							
+		 g711_c 						
+		 g722 							
+		 g722_c 						
+		 ilbc 							
+		 ilbc_c 						
+		# isac_common 					
+		 isac 							
+		# isac_bwinfo 					
+		 isac_vad 						
+		 isac_fix 						
+		 isac_fix_common 				
+		 isac_fix_c 					
+		 pcm16b 						
+		 pcm16b_c 						
+		 audio_coding_opus_common 		
+		 webrtc_opus 					
+		 webrtc_multiopus 				
+		 webrtc_opus_wrapper 			
+		 audio_network_adaptor_config 	
+		 audio_network_adaptor 			
+		 neteq 							
+		 default_neteq_factory 			
+		 neteq_tools_minimal 			
+		 neteq_test_tools 				
+		 neteq_tools 					
+		 neteq_input_audio_tools 		
+		 #audio_decoder_interface 		
+		# audio_encoder_interface 		
 
 
 

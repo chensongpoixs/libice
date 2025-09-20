@@ -45,7 +45,9 @@ namespace libice {
 		config.on_dtls_handshake_error_ = [](rtc::SSLHandshakeError s) {};
 
 
-		transport_controller_ = std::make_unique<webrtc::JsepTransportController>( config);
+		transport_controller_ = std::make_unique<webrtc::JsepTransportController>(
+			network_thread, port_allocator, nullptr /* async_resolver_factory */,
+			config);
 
 		network_thread->Invoke<void>(RTC_FROM_HERE, [&] {
 			ConnectTransportControllerSignals(); 
