@@ -29,8 +29,11 @@
 #include "ice/ice_credentials_iterator.h"
 namespace libice
 {
-	transport_controller::transport_controller(rtc::scoped_refptr<libice::ConnectionContext>   context)
-		: context_(context)
+	transport_controller::transport_controller(  rtc::Thread*   t,   rtc::Thread* s
+		, rtc::BasicNetworkManager* default_network_manager,
+		libice::BasicPacketSocketFactory* default_socket_factory)
+		: network_thread_(t)
+		, signalie_thread_(s)
 		, async_dns_resolver_factory_(std::make_unique<libice::WrappingAsyncDnsResolverFactory>(
             std::make_unique<libice::BasicAsyncResolverFactory>()))
 		, ice_transport_factory_(std::make_unique<libice::DefaultIceTransportFactory>())
@@ -38,10 +41,27 @@ namespace libice
 		, ices_()
 		, dtls_transports_()
 	{
-
-		port_allocator_ = std::make_shared<libice::BasicPortAllocator>(
-			context_->default_network_manager(), context_->default_socket_factory(),
-			nullptr);
+		 
+		if (network_thread_->IsCurrent())
+		{
+			port_allocator_ = std::make_shared<libice::BasicPortAllocator>(
+				default_network_manager, default_socket_factory,
+				nullptr);
+			port_allocator_->Initialize();
+		}
+		else
+		{
+			network_thread_->PostTask(webrtc::ToQueuedTask(signaling_thread_safety_.flag(), [this, default_network_manager, default_socket_factory]() {
+				RTC_DCHECK_RUN_ON(network_thread_);
+				port_allocator_ = std::make_shared<libice::BasicPortAllocator>(
+					default_network_manager, default_socket_factory,
+					nullptr);
+				port_allocator_->Initialize();
+			}));
+		}
+			
+	 
+		
 		//BasicAsyncResolverFactory
 	}
 	transport_controller::~transport_controller()
@@ -53,68 +73,91 @@ namespace libice
 		{
 			return -1;
 		}
-		
-		for (size_t i = 0; i < desc->contents_.size(); ++i) {
-			std::string mid = desc->contents_[i].name;
-			//ContentInfo content = desc->contents_[i];
-			if (desc->HasGroup(mid) && mid != desc->contents_[0].name) {
-				continue;
-			}
-
-			// 创建ICE transport
-			// RTCP, 默认开启a=rtcp:mux
-			//ice_agent_->CreateDtlsTransport(mid, 1); // 1: RTP
-			rtc::scoped_refptr<libice::IceTransportInterface> ice =
-				CreateIceTransport(desc->contents_[i].name, /*rtcp=*/false);
-
-
-			ices_.insert(std::make_pair(mid, ice));
-
-			std::shared_ptr<libice::DtlsTransportInternal> rtp_dtls_transport =
-				CreateDtlsTransport(&desc->contents_[i], ice->internal());
-			dtls_transports_.insert(std::make_pair(mid, rtp_dtls_transport));
-			// 设置ICE param
-			TransportInfo* td = desc->GetTransportInfoByName(mid);
-			if (td) 
-			{
-				libice::IceParameters  remote_ice_parameter;
-				remote_ice_parameter.pwd = td->description.ice_pwd;
-				remote_ice_parameter.ufrag = td->description.ice_ufrag;
-				//td->description.r
-				//content.media_description()
-				ice->internal()->SetRemoteIceParameters(remote_ice_parameter);
-				rtp_dtls_transport->SetRemoteFingerprint(td->description.identity_fingerprint->algorithm,
-					td->description.identity_fingerprint->digest.cdata(),
-					td->description.identity_fingerprint->digest.size()
-				);
-				//ice_agent_->SetRemoteIceParams(mid, 1, libice::IceParameters( td->ice_ufrag, td->ice_pwd));
-				//if (td->identity_fingerprint)
-				{
-					/*	 std::string  fingerprint((char *)td->identity_fingerprint->digest.data()
-						 , td->identity_fingerprint->digest.size());*/
-					//ice_agent_->SetRemoteFingerprint(td->alg
-					//	, td->fingerprint);
-
-					//ice_agent_->SetIceParams
+		//context_->network_thread()->Invoke<void>( RTC_FROM_HERE,[=](){
+			for (size_t i = 0; i < desc->contents_.size(); ++i) {
+				std::string mid = desc->contents_[i].name;
+				//ContentInfo content = desc->contents_[i];
+				RTC_LOG(LS_INFO) << desc->content_groups_[0].ToString();
+				if (/*desc->HasGroup(mid) &&*/ mid != desc->contents_[0].name) {
+					continue;
 				}
-				//auto dtls = _get_dtls_transport(mid);
-				//if (dtls) {
-				//	dtls->set_remote_fingerprint(td->identity_fingerprint->algorithm,
-				//		td->identity_fingerprint->digest.cdata(),
-				//		td->identity_fingerprint->digest.size());
-				//}
-				//ice_agent_->UseDtlsSrtp(mid);
+
+			
+
+
+			
+					// 创建ICE transport
+				// RTCP, 默认开启a=rtcp:mux
+				//ice_agent_->CreateDtlsTransport(mid, 1); // 1: RTP
+					
+						
+
+				auto  pi =  network_thread_->Invoke<std::pair<rtc::scoped_refptr<libice::IceTransportInterface>, std::shared_ptr<libice::DtlsTransportInternal> > >(RTC_FROM_HERE, [&] {
+					rtc::scoped_refptr<libice::IceTransportInterface> ice = CreateIceTransport(desc->contents_[i].name, /*rtcp=*/false);
+						//  ice 
+						RTC_LOG(LS_INFO) << "create ice  name " << mid;
+						
+
+						std::shared_ptr<libice::DtlsTransportInternal> rtp_dtls_transport =
+							CreateDtlsTransport(&desc->contents_[i], ice->internal());
+						
+						return std::make_pair(ice, rtp_dtls_transport);
+					});
+
+
+					
+				rtc::scoped_refptr<libice::IceTransportInterface> ice = pi.first;
+				std::shared_ptr<libice::DtlsTransportInternal> rtp_dtls_transport = pi.second;
+				ices_.insert(std::make_pair(mid, ice));
+				dtls_transports_.insert(std::make_pair(mid, rtp_dtls_transport));
+				// 设置ICE param
+				TransportInfo* td = desc->GetTransportInfoByName(mid);
+				if (td) 
+				{
+					libice::IceParameters  remote_ice_parameter;
+					remote_ice_parameter.pwd = td->description.ice_pwd;
+					remote_ice_parameter.ufrag = td->description.ice_ufrag;
+					//td->description.r
+					//content.media_description()
+				
+					 
+
+					 network_thread_->PostTask(ToQueuedTask(signaling_thread_safety_.flag(), [this, remote_ice_parameter, ice, rtp_dtls_transport, td]() {
+						 RTC_DCHECK_RUN_ON(network_thread_);
+						 ice->internal()->SetRemoteIceParameters(remote_ice_parameter);
+						rtp_dtls_transport->SetRemoteFingerprint(td->description.identity_fingerprint->algorithm,
+							td->description.identity_fingerprint->digest.cdata(),
+							td->description.identity_fingerprint->digest.size()
+						);
+					}));
+					//ice_agent_->SetRemoteIceParams(mid, 1, libice::IceParameters( td->ice_ufrag, td->ice_pwd));
+					//if (td->identity_fingerprint)
+					{
+						/*	 std::string  fingerprint((char *)td->identity_fingerprint->digest.data()
+							 , td->identity_fingerprint->digest.size());*/
+						//ice_agent_->SetRemoteFingerprint(td->alg
+						//	, td->fingerprint);
+
+						//ice_agent_->SetIceParams
+					}
+					//auto dtls = _get_dtls_transport(mid);
+					//if (dtls) {
+					//	dtls->set_remote_fingerprint(td->identity_fingerprint->algorithm,
+					//		td->identity_fingerprint->digest.cdata(),
+					//		td->identity_fingerprint->digest.size());
+					//}
+					//ice_agent_->UseDtlsSrtp(mid);
+				}
+
+				// 设置ICE candidate
+				/*for (auto candidate : content->candidates()) {
+					ice_agent_->AddRemoteCandidate(mid, 1, candidate);
+				}*/
 			}
-
-			// 设置ICE candidate
-			/*for (auto candidate : content->candidates()) {
-				ice_agent_->AddRemoteCandidate(mid, 1, candidate);
-			}*/
-		}
-
+		//});
 		return 0;
 	}
-	int transport_controller::set_local_sdp(SessionDescription * desc)
+	int transport_controller::set_local_sdp(SessionDescription * desc, rtc::scoped_refptr<rtc::RTCCertificate> certificate)
 	{
 
 		if (!desc) {
@@ -123,7 +166,7 @@ namespace libice
 		for (size_t i = 0; i < desc->contents_.size(); ++i) {
 			std::string mid = desc->contents_[i].name;
 			//ContentInfo content = desc->contents_[i];
-			if (desc->HasGroup(mid) && mid != desc->contents_[0].name) {
+			if (mid != desc->contents_[0].name/*desc->HasGroup(mid) && mid != desc->content_groups_[0].semantics_*/) {
 				continue;
 			}
 			TransportInfo* td = desc->GetTransportInfoByName(mid);
@@ -137,20 +180,56 @@ namespace libice
 				local_ice_parameter.ufrag = td->description.ice_ufrag;
 				//td->description.r
 				//content.media_description()
-				ices_[mid]->internal()->SetRemoteIceParameters(local_ice_parameter);
-				dtls_transports_[mid]->SetRemoteFingerprint(td->description.identity_fingerprint->algorithm,
-					td->description.identity_fingerprint->digest.cdata(),
-					td->description.identity_fingerprint->digest.size());
+
+				network_thread_->PostTask(ToQueuedTask(signaling_thread_safety_.flag(), [mid, local_ice_parameter, this, certificate]() {
+					RTC_DCHECK_RUN_ON(network_thread_);
+					ices_[mid]->internal()->SetIceParameters(local_ice_parameter);
+				//	auto ssl_fingerprint = rtc::SSLFingerprint::CreateFromRfc4572(alg, fingerprint);
+					dtls_transports_[mid]->SetLocalCertificate(certificate);
+				}));
+				
 
 				
 			}
 		}
-		ices_["audio"]->internal()->MaybeStartGathering();
+
+		 
+			if (network_thread_->IsCurrent())
+			{
+				//	context_->network_thread()->PostTask(ToQueuedTask(signaling_thread_safety_.flag(), [this]() {
+				ices_["audio"]->internal()->MaybeStartGathering();
+				//}));
+			}
+			else
+			{
+				network_thread_->PostTask(ToQueuedTask(signaling_thread_safety_.flag(), [this]() {
+					RTC_DCHECK_RUN_ON(network_thread_);
+					ices_["audio"]->internal()->MaybeStartGathering();
+				}));
+			}
+		 
+		
+		
+		
 		return 0;
 	}
 	int transport_controller::set_remote_candidate(const libice::Candidate & candidate)
 	{
-		ices_["audio"]->internal()->AddRemoteCandidate(candidate);
+		if (network_thread_->IsCurrent())
+		{
+			//	context_->network_thread()->PostTask(ToQueuedTask(signaling_thread_safety_.flag(), [this]() {
+			ices_["audio"]->internal()->AddRemoteCandidate(candidate);
+			//}));
+		}
+		else
+		{
+			network_thread_->PostTask(ToQueuedTask(signaling_thread_safety_.flag(), [this, candidate]() {
+				RTC_DCHECK_RUN_ON(network_thread_);
+				ices_["audio"]->internal()->AddRemoteCandidate(candidate);
+			}));
+		}
+
+		
 		return 0;
 	}
 	int transport_controller::send_rtp_packet(const std::string & transport_name, const char * data, size_t len)
@@ -179,7 +258,7 @@ namespace libice
 	std::shared_ptr<libice::DtlsTransportInternal> transport_controller::CreateDtlsTransport(
 		 libice::ContentInfo * content_info, libice::IceTransportInternal * ice)
 	{
-		RTC_DCHECK_RUN_ON(context_->network_thread());
+	//	RTC_DCHECK_RUN_ON(context_->signaling_thread());
 
 
 		std::shared_ptr<libice::DtlsTransportInternal> dtls;

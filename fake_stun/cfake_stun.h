@@ -50,8 +50,8 @@
 namespace libice {
 
 	namespace {
-		const rtc::SocketAddress server_addr("99.99.99.1", 3478);
-		const rtc::SocketAddress client_addr("1.2.3.4", 1234);
+		const rtc::SocketAddress server_addr("192.168.3.2", 3478);
+		const rtc::SocketAddress client_addr("192.168.3.2", 1234);
 	}  // namespace
 
 

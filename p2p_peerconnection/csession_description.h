@@ -91,14 +91,14 @@ public:
 	// nullptr if the cast fails.
 	virtual VideoContentDescription* as_video() { return nullptr; }
 	virtual const VideoContentDescription* as_video() const { return nullptr; }
-	/*std::unique_ptr<MediaContentDescription> Clone() const {
+	std::unique_ptr<MediaContentDescription> Clone() const {
 		return absl::WrapUnique(CloneInternal());
-	}*/
+	}
  
 	// Copy function that returns a raw pointer. Caller will assert ownership.
 	// Should only be called by the Clone() function. Must be implemented
 	// by each final subclass.
-	//virtual MediaContentDescription* CloneInternal() const = 0;
+	virtual MediaContentDescription* CloneInternal() const = 0;
 	enum ExtmapAllowMixed { kNo, kSession, kMedia };
   bool rtcp_mux_ = false;
   bool rtcp_reduced_size_ = false;
@@ -139,9 +139,9 @@ struct AudioContentDescription : public MediaContentDescriptionImpl<libmedia::Au
 	virtual AudioContentDescription* as_audio() { return this; }
 	virtual const AudioContentDescription* as_audio() const { return this; }
 
-	/*virtual AudioContentDescription* CloneInternal() const {
+	virtual AudioContentDescription* CloneInternal() const {
 		return new AudioContentDescription(*this);
-	}*/
+	}
 	
 };
 
@@ -153,9 +153,9 @@ struct VideoContentDescription : public MediaContentDescriptionImpl<libmedia::Vi
 	// nullptr if the cast fails.
 	virtual VideoContentDescription* as_video() { return this; }
 	virtual const VideoContentDescription* as_video() const { return this; }
-	/*virtual VideoContentDescription* CloneInternal() const {
+	virtual VideoContentDescription* CloneInternal() const {
 		return new VideoContentDescription(*this);
-	}*/
+	}
 };
 
 //struct SctpDataContentDescription : public MediaContentDescription {
@@ -200,15 +200,9 @@ struct    ContentInfo {
   
 public:
 	ContentInfo() = default;
-	ContentInfo(const ContentInfo& o)
-	{
-		name = o.name;
-		type = o.type;
-		rejected = o.rejected;
-		bundle_only = o.bundle_only;
-		description_.reset(o.description_.get());
-	}
-	ContentInfo& operator=(const ContentInfo& o) = default;
+	ContentInfo(const ContentInfo& o);
+ 
+	ContentInfo& operator=(const ContentInfo& o);
 	ContentInfo(ContentInfo&& o) = default;
 	ContentInfo& operator=(ContentInfo&& o) = default;
   // TODO(bugs.webrtc.org/8620): Rename this to mid.
@@ -219,6 +213,7 @@ public:
    
   friend class SessionDescription;
   std::unique_ptr<MediaContentDescription> description_;
+ // MediaContentDescription *description_;
 //private:
 	///ContentInfo(const libice::ContentInfo &c);
 };

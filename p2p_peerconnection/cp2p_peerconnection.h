@@ -36,7 +36,7 @@ namespace libice
 		bool dtls_on = true;
 	};
 
-	class p2p_peer_connection : public sigslot::has_slots<>
+	class p2p_peer_connection// : public sigslot::has_slots<>
 	{
 	public:
 		p2p_peer_connection();

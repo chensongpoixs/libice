@@ -238,6 +238,8 @@ P2PTransportChannel::P2PTransportChannel(
   } else {
     ice_controller_ = std::make_unique<BasicIceController>(args);
   }
+
+  RTC_LOG_F(LS_INFO) << "";
 }
 
 // Public constructor, exposed for backwards compatibility.
@@ -880,6 +882,7 @@ int P2PTransportChannel::check_receiving_interval() const {
 
 void P2PTransportChannel::MaybeStartGathering() {
   RTC_DCHECK_RUN_ON(network_thread_);
+  RTC_LOG_F(LS_INFO) << "";
   if (ice_parameters_.ufrag.empty() || ice_parameters_.pwd.empty()) {
     RTC_LOG(LS_ERROR)
         << "Cannot gather candidates because ICE parameters are empty"
@@ -887,6 +890,7 @@ void P2PTransportChannel::MaybeStartGathering() {
         << ice_parameters_.ufrag << " pwd: " << ice_parameters_.pwd;
     return;
   }
+  RTC_LOG_F(LS_INFO) << "";
   // Start gathering if we never started before, or if an ICE restart occurred.
   if (allocator_sessions_.empty() ||
       IceCredentialsChanged(allocator_sessions_.back()->ice_ufrag(),
@@ -917,7 +921,7 @@ void P2PTransportChannel::MaybeStartGathering() {
       }
       session->StopGettingPorts();
     }
-
+	RTC_LOG_F(LS_INFO) << "";
     // Time for a new allocator.
     std::unique_ptr<PortAllocatorSession> pooled_session =
         allocator_->TakePooledSession(transport_name(), component(),

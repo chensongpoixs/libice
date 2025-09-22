@@ -32,14 +32,16 @@ namespace libice
 	class transport_controller : public sigslot::has_slots<>
 	{
 	public:
-		transport_controller(rtc::scoped_refptr<libice::ConnectionContext>   context);
+		transport_controller(  rtc::Thread*   t,   rtc::Thread* s
+		, rtc::BasicNetworkManager* default_network_manager,
+		libice::BasicPacketSocketFactory* default_socket_factory);
 		virtual ~transport_controller();
 
 		 
 	public:
 
 		int  set_remote_sdp(SessionDescription * desc);
-		int  set_local_sdp(SessionDescription * desc);
+		int  set_local_sdp(SessionDescription * desc, rtc::scoped_refptr<rtc::RTCCertificate> certificate);
 
 
 
@@ -104,7 +106,9 @@ namespace libice
 		//void on_ice_dtls_state(libice::IceDtlsTransportState ice_state);
 
 	private:
-		rtc::scoped_refptr<libice::ConnectionContext>   context_;
+		
+		  rtc::Thread*        network_thread_;
+		  rtc::Thread*        signalie_thread_;
 		std::unique_ptr<webrtc::AsyncDnsResolverFactoryInterface> async_dns_resolver_factory_;
 		std::shared_ptr < libice::PortAllocator>    port_allocator_ = nullptr;
 		std::unique_ptr<libice::IceTransportFactory>  ice_transport_factory_ = nullptr;
@@ -117,6 +121,7 @@ namespace libice
 		std::map<std::string, rtc::scoped_refptr<libice::IceTransportInterface>>  ices_;
 
 		std::map<std::string, std::shared_ptr< libice::DtlsTransportInternal>>   dtls_transports_;
+		webrtc::ScopedTaskSafety signaling_thread_safety_;
 	};
 
 }

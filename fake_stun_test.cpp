@@ -20,7 +20,8 @@
 
 #include  "fake_stun/cfake_stun.h"
 
-
+#include <thread>
+#include <chrono>
 #include <iostream>
 
 using namespace libice;
@@ -97,11 +98,64 @@ void TestNoXorMappedAddr()
 }
 
 
+
+class  callback_address___ : public sigslot::has_slots<>
+{
+public:
+	callback_address___(std::shared_ptr<rtc::BasicNetworkManager> p)
+		: p_(p)
+	{
+		p->SignalNetworksChanged.connect(this, &callback_address___::OnNetworksChanged);
+		p->StartUpdating();
+		RTC_LOG(LS_INFO) << "StartUpdating  .....";
+	}
+private:
+	void  OnNetworksChanged()
+	{
+		std::vector<rtc::Network*> networks;
+		p_->GetNetworks(&networks);
+
+
+
+		p_->DumpNetworks();
+		RTC_LOG(LS_INFO) << "netowk size =" << networks.size();
+
+		for (auto n : networks)
+		{
+			RTC_LOG(LS_INFO) << "network info = " << n->ToString();
+		}
+
+		p_->StartUpdating();
+	}
+private:
+	std::shared_ptr<rtc::BasicNetworkManager> p_;
+
+};
+
 int main(int argc, char *argv[])
 {
-	TestGood();
-	TestGoodXorMappedAddr();
-	TestNoXorMappedAddr();
+	//stun_server_test.SetUp();
+	//TestGood();
+	//TestGoodXorMappedAddr();
+	//TestNoXorMappedAddr();
 
+	std::unique_ptr<rtc::Thread>  network = rtc::Thread::CreateWithSocketServer();
+
+	network->Start();
+
+	network->PostTask(RTC_FROM_HERE, []() {
+		auto p = std::make_shared<rtc::BasicNetworkManager>();
+
+		callback_address___ * c = new callback_address___(p);
+	});
+	
+	/*p->SignalNetworksChanged.connect(c, &callback_address___::OnNetworksChanged);
+	p->StartUpdating();
+	RTC_LOG(LS_INFO) << "StartUpdating  .....";*/
+
+	while (true)
+	{
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	}
 	return EXIT_SUCCESS;
 }

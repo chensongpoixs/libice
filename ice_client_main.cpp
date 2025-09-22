@@ -1,4 +1,4 @@
-/******************************************************************************
+﻿/******************************************************************************
  *  Copyright (c) 2025 The CRTC project authors . All Rights Reserved.
  *
  *  Please visit https://chensongpoixs.github.io for detail
@@ -14,7 +14,28 @@
 				   date:  2025-09-17
 
 
+1. 无需 NAT 内网穿透
 
+	同处于一个局域网的两台主机，ICE 建立过程。
+	host 顾名思义，主机的网卡地址。
+	候选对：[host, host]
+	例如：[192.168.1.2, 192.168.1.3]
+
+2. NAT 内网穿透
+
+	不在同一个局域网的两台主机，ICE 建立过程。
+	prflx (peer reflexive candidate) 顾名思义，对端 peer 可以通过外网访问到 这个 peer 的 candidate。?
+	候选对：[prflx, prflx]
+	例如：[120.23.22.2, 130,23,22,2]
+
+3. NAT 无法内网穿透
+
+	不处于一个局域网的两台主机，ICE 建立过程。
+	srflx (server reflexive candidate) 顾名思义，NAT 分配给这个peer 的 candidate ，可以通过外网访问到 这个中继 server（一般是 TURN Server）
+	relay 顾名思义，TURN 分配给 peer 的 candidate
+	候选对：[srflx, relay]
+
+ 
  ******************************************************************************/
 
 

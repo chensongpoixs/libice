@@ -52,29 +52,17 @@ namespace libice {
 
 class RtcEventLog;
 
-// This class contains resources needed by PeerConnection and associated
-// objects. A reference to this object is passed to each PeerConnection. The
-// methods on this object are assumed not to change the state in any way that
-// interferes with the operation of other PeerConnections.
-//
-// This class must be created and destroyed on the signaling thread.
-class ConnectionContext final
+ 
+class ConnectionContext  
     : public rtc::RefCountedNonVirtual<ConnectionContext> {
  public:
-  // Creates a ConnectionContext. May return null if initialization fails.
-  // The Dependencies class allows simple management of all new dependencies
-  // being added to the ConnectionContext.
-  static rtc::scoped_refptr<ConnectionContext> Create(
-      /*PeerConnectionFactoryDependencies* dependencies*/);
-
-  // This class is not copyable or movable.
+  
+  static rtc::scoped_refptr<ConnectionContext> Create();
+   
   ConnectionContext(const ConnectionContext&) = delete;
   ConnectionContext& operator=(const ConnectionContext&) = delete;
 
-  // Functions called from PeerConnection and friends
-  //SctpTransportFactoryInterface* sctp_transport_factory() const {
-  //  return sctp_factory_.get();
-  //}
+  
 
   cricket::ChannelManager* channel_manager() const;
 
@@ -85,56 +73,35 @@ class ConnectionContext final
   rtc::Thread* network_thread() { return network_thread_; }
   const rtc::Thread* network_thread() const { return network_thread_; }
 
- // const WebRtcKeyValueConfig& trials() const { return *trials_.get(); }
-
-  // Accessors only used from the PeerConnectionFactory class
+ 
   rtc::BasicNetworkManager* default_network_manager() {
-    RTC_DCHECK_RUN_ON(signaling_thread_);
+   // RTC_DCHECK_RUN_ON(signaling_thread_);
     return default_network_manager_.get();
   }
   libice::BasicPacketSocketFactory* default_socket_factory() {
-    RTC_DCHECK_RUN_ON(signaling_thread_);
+    //RTC_DCHECK_RUN_ON(signaling_thread_);
     return default_socket_factory_.get();
   }
-  /*CallFactoryInterface* call_factory() {
-    RTC_DCHECK_RUN_ON(worker_thread_);
-    return call_factory_.get();
-  }*/
-
+  
  protected:
-  explicit ConnectionContext(/*PeerConnectionFactoryDependencies* dependencies*/);
+  explicit ConnectionContext();
 
   friend class rtc::RefCountedNonVirtual<ConnectionContext>;
   ~ConnectionContext();
 
  private:
-  // The following three variables are used to communicate between the
-  // constructor and the destructor, and are never exposed externally.
-  bool wraps_current_thread_;
-  // Note: Since owned_network_thread_ and owned_worker_thread_ are used
-  // in the initialization of network_thread_ and worker_thread_, they
-  // must be declared before them, so that they are initialized first.
-  std::unique_ptr<rtc::Thread> owned_network_thread_
-      RTC_GUARDED_BY(signaling_thread_);
-  std::unique_ptr<rtc::Thread> owned_worker_thread_
-      RTC_GUARDED_BY(signaling_thread_);
+
+  std::unique_ptr<rtc::Thread> owned_network_thread_;
+  std::unique_ptr<rtc::Thread> owned_worker_thread_;
+  std::unique_ptr<rtc::Thread> owned_signaling_thread_ ;
   rtc::Thread* const network_thread_;
   rtc::Thread* const worker_thread_;
-  rtc::Thread* const signaling_thread_;
-  // channel_manager is accessed both on signaling thread and worker thread.
- // std::unique_ptr<cricket::ChannelManager> channel_manager_;
-  std::unique_ptr<rtc::NetworkMonitorFactory> const network_monitor_factory_
-      RTC_GUARDED_BY(signaling_thread_);
-  std::unique_ptr<rtc::BasicNetworkManager> default_network_manager_
-      RTC_GUARDED_BY(signaling_thread_);
- /* std::unique_ptr<webrtc::CallFactoryInterface> const call_factory_
-      RTC_GUARDED_BY(worker_thread_);*/
+  rtc::Thread* const signaling_thread_; 
+  std::unique_ptr<rtc::NetworkMonitorFactory> const network_monitor_factory_ ;
+  std::unique_ptr<rtc::BasicNetworkManager> default_network_manager_ ; 
 
-  std::unique_ptr<libice::BasicPacketSocketFactory> default_socket_factory_
-      RTC_GUARDED_BY(signaling_thread_);
-  //std::unique_ptr<SctpTransportFactoryInterface> const sctp_factory_;
-  // Accessed both on signaling thread and worker thread.
-  //std::unique_ptr<WebRtcKeyValueConfig> const trials_;
+  std::unique_ptr<libice::BasicPacketSocketFactory> default_socket_factory_ ; 
+  webrtc::ScopedTaskSafety signaling_thread_safety_;
 };
 
 }  // namespace webrtc

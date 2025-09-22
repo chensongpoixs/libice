@@ -143,18 +143,41 @@ namespace libice
 		, transport_controller_(nullptr)
 		, signaling_thread_safety_()
 	{
-		context_->signaling_thread()->PostTask(ToQueuedTask(signaling_thread_safety_.flag(), [this]() {
-			RTC_DCHECK_RUN_ON(context_->signaling_thread());
-			transport_controller_ = std::make_unique<transport_controller>(context_);
-		}));
+
+		if (context_->network_thread()->IsCurrent())
+		{
+			transport_controller_ = std::make_unique<transport_controller>(context_->network_thread()
+				, context_->signaling_thread(), context_->default_network_manager(), 
+				context_->default_socket_factory());
+		}
+		else
+		{
+			context_->network_thread()->PostTask(RTC_FROM_HERE, [this]() {
+				RTC_DCHECK_RUN_ON(context_->network_thread());
+				transport_controller_ = std::make_unique<transport_controller>(context_->network_thread()
+					, context_->signaling_thread(), context_->default_network_manager(),
+					context_->default_socket_factory());
+			});
+			/*context_->signaling_thread()->Invoke<void>(RTC_FROM_HERE, [&]() {
+				RTC_DCHECK_RUN_ON(context_->signaling_thread());
+				transport_controller_ = std::make_unique<transport_controller>(context_);
+			});*/
+		/*	context_->signaling_thread()->Invoke<void>(RTC_FROM_HERE, [&]() {
+				RTC_DCHECK_RUN_ON(context_->signaling_thread());
+				transport_controller_ = std::make_unique<transport_controller>(context_);
+			});*/
+			
+		}
+		
 	}
 	p2p_peer_connection::~p2p_peer_connection()
 	{
+		context_->Release();
 	}
 	int p2p_peer_connection::set_remote_sdp(const std::string & sdp)
 	{
 
-
+		 
 		
 		std::vector<std::string> fields;
 		// SDP用\n, \r\n来换行的
@@ -182,6 +205,10 @@ namespace libice
 		TransportInfo  video_td;
 		libice::Candidate audio_c;
 		libice::Candidate video_c;
+		ContentInfo  audio_content_info;
+		
+		ContentInfo video_content_info;
+		//remote_desc_->contents_.push_back(content_info);
 		for (auto field : fields) {
 			// 如果以\r\n换行，去掉尾部的\r
 			if (is_rn) {
@@ -212,9 +239,7 @@ namespace libice
 				//info.mid = mid;
 				// m=audio/video
 				mid = items[0].substr(2);
-				ContentInfo  content_info ;
-				content_info.name = mid;
-				remote_desc_->contents_.push_back(content_info);
+				
 				if (mid == "audio") {
 					//   const std::string& name,
 					//MediaProtocolType type,
@@ -223,10 +248,12 @@ namespace libice
 					//remote_desc_->AddContent(mid, libice::MediaProtocolType::kRtp,  std::move(audio_content));
 					//audio_content.reset(remote_desc_->GetContentByName(mid)->media_description());
 					audio_td.content_name = mid;
+					audio_content_info.name = mid;
 				}
 				else if (mid == "video") {
 					//remote_desc_->AddContent(mid, libice::MediaProtocolType::kRtp, std::move(video_content));
 					video_td.content_name = mid;
+					video_content_info.name = mid;
 				}
 			}
 			
@@ -254,7 +281,10 @@ namespace libice
 				}
 			}
 		}
-
+		audio_content_info.description_ = std::move(audio_content);
+		video_content_info.description_ = std::move(video_content);
+		remote_desc_->contents_.push_back(audio_content_info);
+		remote_desc_->contents_.push_back(video_content_info);
 		remote_desc_->transport_infos_.push_back(audio_td);
 		remote_desc_->transport_infos_.push_back(video_td);
 
@@ -320,7 +350,7 @@ namespace libice
 				audio_stream.ssrcs.push_back(local_audio_ssrc_);
 				audio_content->send_streams_.emplace_back(audio_stream);
 			}
-			content.description_ = std::move(audio_content);
+			content.description_ = std::move((audio_content));
 			local_desc_->contents_.push_back((content));
 		}
 
@@ -391,7 +421,7 @@ namespace libice
 			}
 		}
 
-		transport_controller_->set_local_sdp(local_desc_.get());
+		transport_controller_->set_local_sdp(local_desc_.get(), certificate);
 
 		return local_desc_->ToString();
 		return std::string();

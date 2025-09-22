@@ -150,7 +150,21 @@ inline void MediaContentDescriptionImpl<C>::BuildSsrc(MediaContentDescriptionImp
 }
   
 
- 
+ContentInfo::ContentInfo(const ContentInfo& o)
+	: name(o.name),
+	type(o.type),
+	rejected(o.rejected),
+	bundle_only(o.bundle_only),
+	description_(o.description_->Clone()) {}
+
+ContentInfo& ContentInfo::operator=(const ContentInfo& o) {
+	name = o.name;
+	type = o.type;
+	rejected = o.rejected;
+	bundle_only = o.bundle_only;
+	description_ = o.description_->Clone();
+	return *this;
+}
 
 bool SessionDescription::HasGroup(const std::string & mid)
 {

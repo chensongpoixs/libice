@@ -264,6 +264,7 @@ void BasicPortAllocator::InitRelayPortFactory(
   if (relay_port_factory != nullptr) {
     relay_port_factory_ = relay_port_factory;
   } else {
+	  RTC_LOG_F(LS_WARNING) << "ice turn server not  supper ！！！";
 	  // TODO@chensong 2025-09-21   trun  server 需要时在添加
  //   default_relay_port_factory_.reset(new TurnPortFactory());
  //   relay_port_factory_ = default_relay_port_factory_.get();
@@ -288,17 +289,13 @@ BasicPortAllocatorSession::BasicPortAllocatorSession(
       allocation_started_(false),
       network_manager_started_(false),
       allocation_sequences_created_(false),
-      turn_port_prune_policy_(allocator->turn_port_prune_policy()) {
-  TRACE_EVENT0("webrtc",
-               "BasicPortAllocatorSession::BasicPortAllocatorSession");
+      turn_port_prune_policy_(allocator->turn_port_prune_policy()) { 
   allocator_->network_manager()->SignalNetworksChanged.connect(
       this, &BasicPortAllocatorSession::OnNetworksChanged);
   allocator_->network_manager()->StartUpdating();
 }
 
-BasicPortAllocatorSession::~BasicPortAllocatorSession() {
-  TRACE_EVENT0("webrtc",
-               "BasicPortAllocatorSession::~BasicPortAllocatorSession");
+BasicPortAllocatorSession::~BasicPortAllocatorSession() { 
   RTC_DCHECK_RUN_ON(network_thread_);
   allocator_->network_manager()->StopUpdating();
 
@@ -723,6 +720,8 @@ std::vector<rtc::Network*> BasicPortAllocatorSession::GetNetworks() {
       network_manager->GetAnyAddressNetworks(&networks);
     }
   }
+#if 1
+  // 收集本地127.0.0.1 地址
   // Filter out link-local networks if needed.
   if (flags() & PORTALLOCATOR_DISABLE_LINK_LOCAL_NETWORKS) {
     NetworkFilter link_local_filter(
@@ -738,6 +737,7 @@ std::vector<rtc::Network*> BasicPortAllocatorSession::GetNetworks() {
       },
       "ignored");
   FilterNetworks(&networks, ignored_filter);
+#endif // 
   if (flags() & PORTALLOCATOR_DISABLE_COSTLY_NETWORKS) {
     uint16_t lowest_cost = rtc::kNetworkCostMax;
     for (rtc::Network* network : networks) {
