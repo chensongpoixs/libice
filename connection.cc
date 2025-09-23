@@ -200,13 +200,13 @@ void ConnectionRequest::Prepare(StunMessage* request) {
   request->AddAttribute(std::make_unique<StunUInt32Attribute>(
       STUN_ATTR_GOOG_NETWORK_INFO, network_info));
   // WebRTC-PiggybackIceCheckAcknowledgement  ice ÓÅ»¯²ßÂÔ 
-  //if (webrtc::field_trial::IsEnabled(
-  //        "WebRTC-PiggybackIceCheckAcknowledgement") &&
-  //    connection_->last_ping_id_received()) {
-  //  request->AddAttribute(std::make_unique<StunByteStringAttribute>(
-  //      STUN_ATTR_GOOG_LAST_ICE_CHECK_RECEIVED,
-  //      connection_->last_ping_id_received().value()));
-  //}
+ /* if (webrtc::field_trial::IsEnabled(
+          "WebRTC-PiggybackIceCheckAcknowledgement") &&
+      connection_->last_ping_id_received()) {
+    request->AddAttribute(std::make_unique<StunByteStringAttribute>(
+        STUN_ATTR_GOOG_LAST_ICE_CHECK_RECEIVED,
+        connection_->last_ping_id_received().value()));
+  }*/
 
   // Adding ICE_CONTROLLED or ICE_CONTROLLING attribute based on the role.
   if (connection_->port()->GetIceRole() == ICEROLE_CONTROLLING) {
@@ -638,10 +638,11 @@ void Connection::HandleStunBindingOrGoogPingRequest(IceMessage* msg) {
     }
   }
 
- /* if (webrtc::field_trial::IsEnabled(
-          "WebRTC-PiggybackIceCheckAcknowledgement")) {
+  //if (webrtc::field_trial::IsEnabled(
+  //        "WebRTC-PiggybackIceCheckAcknowledgement"))
+  {
     HandlePiggybackCheckAcknowledgementIfAny(msg);
-  }*/
+  }
 }
 
 void Connection::SendStunBindingResponse(const StunMessage* request) {

@@ -74,35 +74,7 @@ class StreamInterfaceChannel : public rtc::StreamInterface {
 
   RTC_DISALLOW_COPY_AND_ASSIGN(StreamInterfaceChannel);
 };
-
-// This class provides a DTLS SSLStreamAdapter inside a TransportChannel-style
-// packet-based interface, wrapping an existing TransportChannel instance
-// (e.g a P2PTransportChannel)
-// Here's the way this works:
-//
-//   DtlsTransport {
-//       SSLStreamAdapter* dtls_ {
-//           StreamInterfaceChannel downward_ {
-//               IceTransportInternal* ice_transport_;
-//           }
-//       }
-//   }
-//
-//   - Data which comes into DtlsTransport from the underlying
-//     ice_transport_ via OnReadPacket() is checked for whether it is DTLS
-//     or not, and if it is, is passed to DtlsTransport::HandleDtlsPacket,
-//     which pushes it into to downward_. dtls_ is listening for events on
-//     downward_, so it immediately calls downward_->Read().
-//
-//   - Data written to DtlsTransport is passed either to downward_ or directly
-//     to ice_transport_, depending on whether DTLS is negotiated and whether
-//     the flags include PF_SRTP_BYPASS
-//
-//   - The SSLStreamAdapter writes to downward_->Write() which translates it
-//     into packet writes on ice_transport_.
-//
-// This class is not thread safe; all methods must be called on the same thread
-// as the constructor.
+ 
 class DtlsTransport : public DtlsTransportInternal {
  public:
   // `ice_transport` is the ICE transport this DTLS transport is wrapping.  It

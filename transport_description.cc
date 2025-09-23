@@ -174,7 +174,7 @@ bool ConnectionRoleToString(const ConnectionRole& role, std::string* role_str) {
       *role_str = libice::CONNECTIONROLE_HOLDCONN_STR;
       break;
     default:
-		*role_str = libice::CONNECTIONROLE_ACTIVE_STR;
+		//*role_str = libice::CONNECTIONROLE_ACTIVE_STR;
       return false;
   }
   return true;

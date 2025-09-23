@@ -155,7 +155,7 @@ struct TransportDescription {
   std::string ice_ufrag;
   std::string ice_pwd;
   IceMode ice_mode;
-  ConnectionRole connection_role;
+  libice::ConnectionRole connection_role = libice::CONNECTIONROLE_ACTIVE;
 
   std::unique_ptr<rtc::SSLFingerprint> identity_fingerprint;
 };
