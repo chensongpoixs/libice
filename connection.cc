@@ -18,7 +18,7 @@
  ******************************************************************************/
 
 
-#include "ice/connection.h"
+#include "libice/connection.h"
 
 #include <math.h>
 
@@ -29,9 +29,9 @@
 
 #include "absl/algorithm/container.h"
 #include "absl/strings/match.h"
-#include "ice/port_allocator.h"
+#include "libice/port_allocator.h"
 #include "rtc_base/checks.h"
-#include "ice/port.h"
+#include "libice/port.h"
 #include "rtc_base/crc32.h"
 #include "rtc_base/helpers.h"
 #include "rtc_base/logging.h"
@@ -44,7 +44,7 @@
 #include "rtc_base/strings/string_builder.h"
 #include "rtc_base/third_party/base64/base64.h"
 //#include "system_wrappers/include/field_trial.h"
-#include "ice/stun.h"
+#include "libice/stun.h"
 namespace {
 
 // Determines whether we have seen at least the given maximum number of

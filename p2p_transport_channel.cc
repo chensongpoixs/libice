@@ -18,7 +18,7 @@
  ******************************************************************************/
 
 
-#include "ice/p2p_transport_channel.h"
+#include "libice/p2p_transport_channel.h"
 
 #include <errno.h>
 #include <stdlib.h>
@@ -33,15 +33,15 @@
 #include "absl/memory/memory.h"
 #include "absl/strings/match.h"
 #include "api/async_dns_resolver.h"
-#include "ice/candidate.h"
+#include "libice/candidate.h"
 #include "api/task_queue/queued_task.h"
 #include "logging/rtc_event_log/ice_logger.h"
-#include "ice/basic_async_resolver_factory.h"
-#include "ice/basic_ice_controller.h"
-#include "ice/connection.h"
-#include "ice/connection_info.h"
-#include "ice/regathering_controller.h"
-#include "ice/port.h"
+#include "libice/basic_async_resolver_factory.h"
+#include "libice/basic_ice_controller.h"
+#include "libice/connection.h"
+#include "libice/connection_info.h"
+#include "libice/regathering_controller.h"
+#include "libice/port.h"
 #include "rtc_base/checks.h"
 #include "rtc_base/crc32.h"
 #include "rtc_base/experiments/struct_parameters_parser.h"

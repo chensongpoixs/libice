@@ -24,7 +24,7 @@
 #include <utility>
 
 #include "absl/types/optional.h"
-#include "ice/ice_transport_interface.h"
+#include "libice/ice_transport_interface.h"
 #include "api/rtc_error.h"
 #include "api/scoped_refptr.h"
 #include "rtc_base/ref_count.h"

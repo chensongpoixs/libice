@@ -19,13 +19,13 @@
 
 
 
-#include "ice/port_allocator.h"
+#include "libice/port_allocator.h"
 
 #include <iterator>
 #include <set>
 #include <utility>
 
-#include "ice/ice_credentials_iterator.h"
+#include "libice/ice_credentials_iterator.h"
 #include "rtc_base/checks.h"
 #include "rtc_base/logging.h"
 

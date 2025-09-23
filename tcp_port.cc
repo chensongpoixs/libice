@@ -64,7 +64,7 @@
  *
  */
 
-#include "ice/tcp_port.h"
+#include "libice/tcp_port.h"
 
 #include <errno.h>
 
@@ -72,7 +72,7 @@
 
 #include "absl/algorithm/container.h"
 #include "absl/memory/memory.h"
-#include "ice/p2p_constants.h"
+#include "libice/p2p_constants.h"
 #include "rtc_base/checks.h"
 #include "rtc_base/ip_address.h"
 #include "rtc_base/location.h"

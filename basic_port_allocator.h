@@ -26,8 +26,8 @@
 #include <vector>
 
 #include "api/turn_customizer.h"
-#include "ice/port_allocator.h"
-#include "ice/relay_port_factory_interface.h"
+#include "libice/port_allocator.h"
+#include "libice/relay_port_factory_interface.h"
 //#include "p2p/client/turn_port_factory.h"
 #include "rtc_base/checks.h"
 #include "rtc_base/network.h"

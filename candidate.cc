@@ -18,7 +18,7 @@
  ******************************************************************************/
 
 
-#include "ice/candidate.h"
+#include "libice/candidate.h"
 
 #include "rtc_base/helpers.h"
 #include "rtc_base/ip_address.h"

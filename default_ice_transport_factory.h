@@ -24,8 +24,8 @@
 #include <memory>
 #include <string>
 
-#include "ice/ice_transport_interface.h"
-#include "ice/p2p_transport_channel.h"
+#include "libice/ice_transport_interface.h"
+#include "libice/p2p_transport_channel.h"
 #include "rtc_base/thread.h"
 
 namespace libice {

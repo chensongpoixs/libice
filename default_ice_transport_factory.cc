@@ -18,12 +18,12 @@
  ******************************************************************************/
 
 
-#include "ice/default_ice_transport_factory.h"
+#include "libice/default_ice_transport_factory.h"
 
 #include <utility>
 
-#include "ice/basic_ice_controller.h"
-#include "ice/ice_controller_factory_interface.h"
+#include "libice/basic_ice_controller.h"
+#include "libice/ice_controller_factory_interface.h"
 
 namespace {
 

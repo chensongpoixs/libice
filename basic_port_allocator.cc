@@ -17,7 +17,7 @@
 
  ******************************************************************************/
 
-#include "ice/basic_port_allocator.h"
+#include "libice/basic_port_allocator.h"
 
 #include <algorithm>
 #include <functional>
@@ -29,12 +29,12 @@
 
 #include "absl/algorithm/container.h"
 #include "absl/memory/memory.h"
-#include "ice/basic_packet_socket_factory.h"
-#include "ice/port.h"
-#include "ice/stun_port.h"
-#include "ice/tcp_port.h"
+#include "libice/basic_packet_socket_factory.h"
+#include "libice/port.h"
+#include "libice/stun_port.h"
+#include "libice/tcp_port.h"
 //#include "ice/turn_port.h"
-#include "ice/udp_port.h"
+#include "libice/udp_port.h"
 #include "rtc_base/checks.h"
 #include "rtc_base/helpers.h"
 #include "rtc_base/logging.h"

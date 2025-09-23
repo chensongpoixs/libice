@@ -18,7 +18,7 @@
  ******************************************************************************/
 
 
-#include "ice/p2p_constants.h"
+#include "libice/p2p_constants.h"
 
 namespace libice {
 

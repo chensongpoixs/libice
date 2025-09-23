@@ -18,11 +18,11 @@
  ******************************************************************************/
 
 
-#include "ice/transport_description.h"
+#include "libice/transport_description.h"
 
 #include "absl/strings/ascii.h"
 #include "absl/strings/match.h"
-#include "ice/p2p_constants.h"
+#include "libice/p2p_constants.h"
 #include "rtc_base/arraysize.h"
 #include "rtc_base/logging.h"
 #include "rtc_base/strings/string_builder.h"

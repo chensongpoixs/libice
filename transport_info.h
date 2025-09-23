@@ -24,9 +24,9 @@
 #include <string>
 #include <vector>
 
-#include "ice/candidate.h"
-#include "ice/p2p_constants.h"
-#include "ice/transport_description.h"
+#include "libice/candidate.h"
+#include "libice/p2p_constants.h"
+#include "libice/transport_description.h"
 #include "rtc_base/helpers.h"
 
 namespace libice {

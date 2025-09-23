@@ -18,7 +18,7 @@
  ******************************************************************************/
 
 
-#include "ice/regathering_controller.h"
+#include "libice/regathering_controller.h"
 #include "rtc_base/task_utils/to_queued_task.h"
 
 namespace libice {

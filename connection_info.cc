@@ -17,7 +17,7 @@
 
  ******************************************************************************/
 
-#include "ice/connection_info.h"
+#include "libice/connection_info.h"
 
 namespace libice {
 

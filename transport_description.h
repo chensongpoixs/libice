@@ -28,7 +28,7 @@
 #include "absl/algorithm/container.h"
 #include "absl/types/optional.h"
 #include "api/rtc_error.h"
-#include "ice/p2p_constants.h"
+#include "libice/p2p_constants.h"
 #include "rtc_base/ssl_fingerprint.h"
 #include "rtc_base/system/rtc_export.h"
 

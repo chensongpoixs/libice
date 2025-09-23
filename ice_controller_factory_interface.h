@@ -24,8 +24,8 @@
 #include <memory>
 #include <string>
 
-#include "ice/ice_controller_interface.h"
-#include "ice/ice_transport_internal.h"
+#include "libice/ice_controller_interface.h"
+#include "libice/ice_transport_internal.h"
 
 namespace libice {
 

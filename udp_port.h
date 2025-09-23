@@ -22,6 +22,6 @@
 #define _C_P2P_BASE_UDP_PORT_H_
 
 // StunPort will be handling UDPPort functionality.
-#include "ice/stun_port.h"
+#include "libice/stun_port.h"
 
 #endif  // P2P_BASE_UDP_PORT_H_

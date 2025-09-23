@@ -17,9 +17,9 @@
 
  ******************************************************************************/
 
-#include "ice/ice_transport_internal.h"
+#include "libice/ice_transport_internal.h"
 
-#include "ice/p2p_constants.h"
+#include "libice/p2p_constants.h"
 
 namespace libice {
 

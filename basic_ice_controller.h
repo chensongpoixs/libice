@@ -27,9 +27,9 @@
 #include <utility>
 #include <vector>
 
-#include "ice/ice_controller_factory_interface.h"
-#include "ice/ice_controller_interface.h"
-#include "ice/p2p_transport_channel.h"
+#include "libice/ice_controller_factory_interface.h"
+#include "libice/ice_controller_interface.h"
+#include "libice/p2p_transport_channel.h"
 
 namespace libice {
 

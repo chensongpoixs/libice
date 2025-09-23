@@ -17,13 +17,13 @@
 
  ******************************************************************************/
 
-#include "ice/basic_packet_socket_factory.h"
+#include "libice/basic_packet_socket_factory.h"
 
 #include <stddef.h>
 
 #include <string>
 
-#include "ice/async_stun_tcp_socket.h"
+#include "libice/async_stun_tcp_socket.h"
 #include "rtc_base/async_resolver.h"
 #include "rtc_base/async_tcp_socket.h"
 #include "rtc_base/async_udp_socket.h"

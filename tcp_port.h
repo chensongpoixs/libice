@@ -26,8 +26,8 @@
 #include <string>
 
 #include "absl/memory/memory.h"
-#include "ice/connection.h"
-#include "ice/port.h"
+#include "libice/connection.h"
+#include "libice/port.h"
 #include "rtc_base/async_packet_socket.h"
 
 namespace libice {

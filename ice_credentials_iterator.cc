@@ -18,9 +18,9 @@
  ******************************************************************************/
 
 
-#include "ice/ice_credentials_iterator.h"
+#include "libice/ice_credentials_iterator.h"
 
-#include "ice/p2p_constants.h"
+#include "libice/p2p_constants.h"
 #include "rtc_base/helpers.h"
 
 namespace libice {

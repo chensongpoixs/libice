@@ -25,8 +25,8 @@
 #include <utility>
 #include <vector>
 
-#include "ice/connection.h"
-#include "ice/ice_transport_internal.h"
+#include "libice/connection.h"
+#include "libice/ice_transport_internal.h"
 
 namespace libice {
 

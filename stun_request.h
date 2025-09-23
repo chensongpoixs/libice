@@ -27,7 +27,7 @@
 #include <map>
 #include <string>
 
-#include "ice/stun.h"
+#include "libice/stun.h"
 #include "rtc_base/message_handler.h"
 #include "rtc_base/third_party/sigslot/sigslot.h"
 #include "rtc_base/thread.h"

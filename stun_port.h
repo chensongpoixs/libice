@@ -26,8 +26,8 @@
 #include <string>
 
 #include "absl/memory/memory.h"
-#include "ice/port.h"
-#include "ice/stun_request.h"
+#include "libice/port.h"
+#include "libice/stun_request.h"
 #include "rtc_base/async_packet_socket.h"
 #include "rtc_base/task_utils/pending_task_safety_flag.h"
 

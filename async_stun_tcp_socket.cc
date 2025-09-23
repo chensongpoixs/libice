@@ -17,13 +17,13 @@
 
  ******************************************************************************/
 
-#include "ice/async_stun_tcp_socket.h"
+#include "libice/async_stun_tcp_socket.h"
 
 #include <errno.h>
 #include <stdint.h>
 #include <string.h>
 
-#include "ice/stun.h"
+#include "libice/stun.h"
 #include "rtc_base/byte_order.h"
 #include "rtc_base/checks.h"
 #include "rtc_base/network/sent_packet.h"

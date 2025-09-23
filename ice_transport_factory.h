@@ -22,7 +22,7 @@
 #ifndef _C_API_ICE_TRANSPORT_FACTORY_H_
 #define _C_API_ICE_TRANSPORT_FACTORY_H_
 
-#include "ice/ice_transport_interface.h"
+#include "libice/ice_transport_interface.h"
 #include "api/scoped_refptr.h"
 #include "rtc_base/system/rtc_export.h"
 

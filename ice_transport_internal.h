@@ -27,13 +27,13 @@
 #include <vector>
 
 #include "absl/types/optional.h"
-#include "ice/candidate.h"
+#include "libice/candidate.h"
 #include "api/rtc_error.h"
 #include "api/transport/enums.h"
-#include "ice/connection.h"
-#include "ice/packet_transport_internal.h"
-#include "ice/port.h"
-#include "ice/transport_description.h"
+#include "libice/connection.h"
+#include "libice/packet_transport_internal.h"
+#include "libice/port.h"
+#include "libice/transport_description.h"
 #include "rtc_base/network_constants.h"
 #include "rtc_base/system/rtc_export.h"
 #include "rtc_base/third_party/sigslot/sigslot.h"

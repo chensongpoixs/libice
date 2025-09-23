@@ -29,8 +29,8 @@
 
 #include "api/sequence_checker.h"
 #include "api/transport/enums.h"
-#include "ice/port.h"
-#include "ice/port_interface.h"
+#include "libice/port.h"
+#include "libice/port_interface.h"
 #include "rtc_base/helpers.h"
 #include "rtc_base/proxy_info.h"
 #include "rtc_base/ssl_certificate.h"

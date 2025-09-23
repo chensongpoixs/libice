@@ -24,8 +24,8 @@
 #include <memory>
 #include <string>
 
-#include "ice/dtls_transport_internal.h"
-#include "ice/ice_transport_internal.h"
+#include "libice/dtls_transport_internal.h"
+#include "libice/ice_transport_internal.h"
 
 namespace libice {
 

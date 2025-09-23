@@ -26,8 +26,8 @@
 #include <vector>
 
 #include "absl/types/optional.h"
-#include "ice/candidate.h"
-#include "ice/transport_description.h"
+#include "libice/candidate.h"
+#include "libice/transport_description.h"
 #include "rtc_base/async_packet_socket.h"
 #include "rtc_base/callback_list.h"
 #include "rtc_base/socket_address.h"

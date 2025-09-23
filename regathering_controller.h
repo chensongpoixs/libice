@@ -23,8 +23,8 @@
 
 #include <memory>
 
-#include "ice/ice_transport_internal.h"
-#include "ice/port_allocator.h"
+#include "libice/ice_transport_internal.h"
+#include "libice/port_allocator.h"
 #include "rtc_base/task_utils/pending_task_safety_flag.h"
 #include "rtc_base/thread.h"
 

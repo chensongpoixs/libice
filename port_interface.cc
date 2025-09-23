@@ -17,7 +17,7 @@
 
  ******************************************************************************/
 
-#include "ice/port_interface.h"
+#include "libice/port_interface.h"
 
 namespace libice {
 

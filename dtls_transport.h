@@ -27,10 +27,10 @@
 #include <vector>
 
 #include "api/crypto/crypto_options.h"
-#include "ice/dtls_transport_interface.h"
+#include "libice/dtls_transport_interface.h"
 #include "api/sequence_checker.h"
-#include "ice/dtls_transport_internal.h"
-#include "ice/ice_transport_internal.h"
+#include "libice/dtls_transport_internal.h"
+#include "libice/ice_transport_internal.h"
 #include "rtc_base/buffer.h"
 #include "rtc_base/buffer_queue.h"
 #include "rtc_base/constructor_magic.h"

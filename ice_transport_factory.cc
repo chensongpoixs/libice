@@ -20,15 +20,15 @@
 
 
 
-#include "ice/ice_transport_factory.h"
+#include "libice/ice_transport_factory.h"
 
 #include <memory>
 #include <utility>
 
-#include "ice/ice_transport_internal.h"
-#include "ice/p2p_constants.h"
-#include "ice/p2p_transport_channel.h"
-#include "ice/port_allocator.h"
+#include "libice/ice_transport_internal.h"
+#include "libice/p2p_constants.h"
+#include "libice/p2p_transport_channel.h"
+#include "libice/port_allocator.h"
 #include "rtc_base/thread.h"
 
 namespace libice {

@@ -18,7 +18,7 @@
  ******************************************************************************/
 
 
-#include "ice/dtls_transport_internal.h"
+#include "libice/dtls_transport_internal.h"
 
 namespace libice {
 

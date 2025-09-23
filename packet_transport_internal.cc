@@ -18,7 +18,7 @@
  ******************************************************************************/
 
 
-#include "ice/packet_transport_internal.h"
+#include "libice/packet_transport_internal.h"
 
 namespace libice {
 

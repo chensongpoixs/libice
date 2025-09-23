@@ -1,6 +1,6 @@
 ﻿
 
-project(ice)
+project(libice)
 cmake_minimum_required(VERSION 2.8)
 MESSAGE(STATUS  "####################################")
 MESSAGE(STATUS  "#############${PROJECT_NAME}###############")
@@ -16,7 +16,17 @@ MESSAGE(STATUS  "####################################")
 #)
 
  
-
+ include_directories(
+	#${XRTC_DIR}
+	#${XRTC_THIRD_PARTY_DIR}/include
+	#${XRTC_DIR}/../xrtc-third_party/NIM_Duilib_Framework
+	../
+	../libwebrtc
+	../deps/libyuv/include
+	../deps/abseil-cpp/
+	../deps/curl-7.81.0/include
+	../deps/jsoncpp/source/include
+)
 
 #
 
@@ -55,6 +65,6 @@ endforeach()
 
 
 
-set_property(TARGET ${PROJECT_NAME}  				PROPERTY FOLDER libice) 
+#set_property(TARGET ${PROJECT_NAME}  				PROPERTY FOLDER libice) 
 
 #file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/resources DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

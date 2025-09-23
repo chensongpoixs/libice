@@ -18,7 +18,7 @@
  ******************************************************************************/
 
 
-#include "ice/port.h"
+#include "libice/port.h"
 
 #include <math.h>
 
@@ -29,8 +29,8 @@
 
 #include "absl/algorithm/container.h"
 #include "absl/strings/match.h"
-#include "ice/connection.h"
-#include "ice/port_allocator.h"
+#include "libice/connection.h"
+#include "libice/port_allocator.h"
 #include "rtc_base/checks.h"
 #include "rtc_base/crc32.h"
 #include "rtc_base/helpers.h"
