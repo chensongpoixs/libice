@@ -39,9 +39,7 @@
 #include "rtc_base/strings/string_builder.h"
 #include "rtc_base/system/no_unique_address.h"
 
-namespace libice {
-class PacketTransportInternal;
-}
+ 
 
 namespace libice {
 
@@ -93,7 +91,7 @@ class DtlsTransport : public DtlsTransportInternal {
 
   ~DtlsTransport() override;
 
-  webrtc::DtlsTransportState dtls_state() const override;
+  DtlsTransportState dtls_state() const override;
   const std::string& transport_name() const override;
   int component() const override;
 
@@ -203,17 +201,16 @@ class DtlsTransport : public DtlsTransportInternal {
   void set_receiving(bool receiving);
   void set_writable(bool writable);
   // Sets the DTLS state, signaling if necessary.
-  void set_dtls_state(webrtc::DtlsTransportState state);
+  void set_dtls_state(DtlsTransportState state);
 
   webrtc::SequenceChecker thread_checker_;
 
   const int component_;
-  webrtc::DtlsTransportState dtls_state_ = webrtc::DtlsTransportState::kNew;
+  DtlsTransportState dtls_state_ = DtlsTransportState::kNew;
   // Underlying ice_transport, not owned by this class.
   IceTransportInternal* const ice_transport_;
   std::unique_ptr<rtc::SSLStreamAdapter> dtls_;  // The DTLS stream
-  StreamInterfaceChannel*
-      downward_;  // Wrapper for ice_transport_, owned by dtls_.
+  StreamInterfaceChannel* downward_;  // Wrapper for ice_transport_, owned by dtls_.
   const std::vector<int> srtp_ciphers_;  // SRTP ciphers to use with DTLS.
   bool dtls_active_ = false;
   rtc::scoped_refptr<rtc::RTCCertificate> local_certificate_;
@@ -230,7 +227,7 @@ class DtlsTransport : public DtlsTransportInternal {
   bool receiving_ = false;
   bool writable_ = false;
 
-  webrtc::RtcEventLog* const event_log_;
+//  webrtc::RtcEventLog* const event_log_;
 
   RTC_DISALLOW_COPY_AND_ASSIGN(DtlsTransport);
 };

@@ -31,9 +31,15 @@
 #include "rtc_base/system/rtc_export.h"
 #include "rtc_base/third_party/sigslot/sigslot.h"
 
+
+namespace rtc
+{
+	struct PacketOptions;
+	struct SentPacket;
+}
+
 namespace libice {
-struct PacketOptions;
-struct SentPacket;
+
 
 class RTC_EXPORT PacketTransportInternal : public sigslot::has_slots<> {
  public:

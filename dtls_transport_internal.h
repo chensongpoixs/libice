@@ -31,7 +31,7 @@
 
 #include "absl/base/attributes.h"
 #include "api/crypto/crypto_options.h"
-#include "api/dtls_transport_interface.h"
+#include "libice/dtls_transport_interface.h"
 #include "api/scoped_refptr.h"
 #include "libice/ice_transport_internal.h"
 #include "libice/packet_transport_internal.h"
@@ -59,7 +59,7 @@ class DtlsTransportInternal : public libice::PacketTransportInternal {
  public:
   ~DtlsTransportInternal() override;
 
-  virtual webrtc::DtlsTransportState dtls_state() const = 0;
+  virtual  DtlsTransportState dtls_state() const = 0;
 
   virtual int component() const = 0;
 
@@ -110,7 +110,7 @@ class DtlsTransportInternal : public libice::PacketTransportInternal {
   // Expose the underneath IceTransport.
   virtual IceTransportInternal* ice_transport() = 0;
 
-  // F: void(DtlsTransportInternal*, const webrtc::DtlsTransportState)
+  // F: void(DtlsTransportInternal*, const DtlsTransportState)
   template <typename F>
   void SubscribeDtlsTransportState(F&& callback) {
     dtls_transport_state_callback_list_.AddReceiver(std::forward<F>(callback));
@@ -127,7 +127,7 @@ class DtlsTransportInternal : public libice::PacketTransportInternal {
   }
 
   void SendDtlsState(DtlsTransportInternal* transport,
-                     webrtc::DtlsTransportState state) {
+                      DtlsTransportState state) {
     dtls_transport_state_callback_list_.Send(transport, state);
   }
 
@@ -149,7 +149,7 @@ class DtlsTransportInternal : public libice::PacketTransportInternal {
   RTC_DISALLOW_COPY_AND_ASSIGN(DtlsTransportInternal);
   webrtc::CallbackList<const rtc::SSLHandshakeError>
       dtls_handshake_error_callback_list_;
-  webrtc::CallbackList<DtlsTransportInternal*, const webrtc::DtlsTransportState>
+  webrtc::CallbackList<DtlsTransportInternal*, const  DtlsTransportState>
       dtls_transport_state_callback_list_;
 };
 
