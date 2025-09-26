@@ -145,7 +145,7 @@ void StreamInterfaceChannel::Close() {
 }
 
 DtlsTransport::DtlsTransport(IceTransportInternal* ice_transport,
-                             const webrtc::CryptoOptions& crypto_options,
+                             const libmedia_transfer_protocol::CryptoOptions& crypto_options,
                              webrtc::RtcEventLog* event_log,
                              rtc::SSLProtocolVersion max_version)
     : component_(ice_transport->component()),

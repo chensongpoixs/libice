@@ -38,7 +38,7 @@
 #include "rtc_base/stream.h"
 #include "rtc_base/strings/string_builder.h"
 #include "rtc_base/system/no_unique_address.h"
-
+#include "libmedia_transfer_protocol/crypto/crypto_options.h"
  
 
 namespace libice {
@@ -85,7 +85,7 @@ class DtlsTransport : public DtlsTransportInternal {
   // outlive the DtlsTransport.
   DtlsTransport(
       IceTransportInternal* ice_transport,
-      const webrtc::CryptoOptions& crypto_options,
+      const libmedia_transfer_protocol::CryptoOptions& crypto_options,
       webrtc::RtcEventLog* event_log,
       rtc::SSLProtocolVersion max_version = rtc::SSL_PROTOCOL_DTLS_12);
 
