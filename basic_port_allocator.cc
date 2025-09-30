@@ -720,7 +720,7 @@ std::vector<rtc::Network*> BasicPortAllocatorSession::GetNetworks() {
       network_manager->GetAnyAddressNetworks(&networks);
     }
   }
-#if 1
+#if 0
   // 收集本地127.0.0.1 地址
   // Filter out link-local networks if needed.
   if (flags() & PORTALLOCATOR_DISABLE_LINK_LOCAL_NETWORKS) {
@@ -737,7 +737,7 @@ std::vector<rtc::Network*> BasicPortAllocatorSession::GetNetworks() {
       },
       "ignored");
   FilterNetworks(&networks, ignored_filter);
-#endif // 
+
   if (flags() & PORTALLOCATOR_DISABLE_COSTLY_NETWORKS) {
     uint16_t lowest_cost = rtc::kNetworkCostMax;
     for (rtc::Network* network : networks) {
@@ -757,7 +757,7 @@ std::vector<rtc::Network*> BasicPortAllocatorSession::GetNetworks() {
         "costly");
     FilterNetworks(&networks, costly_filter);
   }
-
+#endif // 
   // Lastly, if we have a limit for the number of IPv6 network interfaces (by
   // default, it's 5), remove networks to ensure that limit is satisfied.
   //
