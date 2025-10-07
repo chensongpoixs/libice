@@ -28,7 +28,7 @@
 #include "api/units/data_size.h"
 #include "api/units/time_delta.h"
 #include "api/units/timestamp.h"
-
+#include <sstream>
 namespace libice {
 
 // Configuration
@@ -106,6 +106,7 @@ struct PacedPacketInfo {
   int probe_cluster_id = kNotAProbe;
   int probe_cluster_min_probes = -1;
   int probe_cluster_min_bytes = -1;
+  // 探测总的字节数
   int probe_cluster_bytes_sent = 0;
 };
 
@@ -210,12 +211,24 @@ struct NetworkEstimate {
 struct PacerConfig {
 	webrtc::Timestamp at_time = webrtc::Timestamp::PlusInfinity();
   // Pacer should send at most data_window data over time_window duration.
+	//窗口发送的数据量
 	webrtc::DataSize data_window = webrtc::DataSize::Infinity();
+	//窗口时间
 	webrtc::TimeDelta time_window = webrtc::TimeDelta::PlusInfinity();
   // Pacer should send at least pad_window data over time_window duration.
 	webrtc::DataSize pad_window = webrtc::DataSize::Zero();
 	webrtc::DataRate data_rate() const { return data_window / time_window; }
 	webrtc::DataRate pad_rate() const { return pad_window / time_window; }
+
+	std::string  ToString() const {
+		std::stringstream cmd;
+		cmd << "at_time:"<< ""<< webrtc::ToString(at_time);
+		cmd <<",data_window:" << ""<<webrtc::ToString(data_window);
+		cmd <<",time_window:" << ""<<webrtc::ToString(time_window);
+		cmd <<",pad_window:" << ""<<webrtc::ToString(pad_window);
+		return cmd.str();
+
+	}
 };
 
 struct ProbeClusterConfig {
@@ -233,6 +246,12 @@ struct TargetTransferRate {
   webrtc::DataRate target_rate = webrtc::DataRate::Zero();
   webrtc::DataRate stable_target_rate = webrtc::DataRate::Zero();
   double cwnd_reduce_ratio = 0;
+  std::string ToString() const
+  {
+	  std::stringstream cmd;
+	  cmd << "target_rate:" << webrtc::ToString(target_rate);
+	  return cmd.str();
+  }
 };
 
 // Contains updates of network controller comand state. Using optionals to
@@ -246,6 +265,28 @@ struct NetworkControlUpdate {
   absl::optional<PacerConfig> pacer_config;
   std::vector<ProbeClusterConfig> probe_cluster_configs;
   absl::optional<TargetTransferRate> target_rate;
+
+
+  std::string ToString() const {
+	  std::stringstream cmd;
+	  cmd << "congestion_window:";
+	  if (congestion_window.has_value())
+	  {
+		  cmd << webrtc::ToString(congestion_window.value());
+	  } 
+	  cmd << "\r\npacer_config:";
+	  if (pacer_config.has_value())
+	  {
+		  cmd << pacer_config.value().ToString();
+	  }
+	  cmd << "\r\TargetTransferRate:";
+	  if (target_rate.has_value())
+	  {
+		  cmd << target_rate.value().ToString();
+	  }
+	  return cmd.str();
+
+  }
 };
 
 // Process control
