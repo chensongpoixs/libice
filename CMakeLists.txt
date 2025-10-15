@@ -31,6 +31,7 @@ file(GLOB ice_source
 	*.h
 	*.cpp 
 	 *.cc 
+	 README.md
 ) 
 
 
