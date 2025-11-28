@@ -25,9 +25,15 @@
 #include "api/packet_socket_factory.h"
 #include "rtc_base/socket.h"
 
+
+namespace rtc {
+  class   SocketFactory;
+}
+
+
 namespace libice {
 
-class rtc::SocketFactory;
+
 
 class BasicPacketSocketFactory : public rtc::PacketSocketFactory {
  public:
